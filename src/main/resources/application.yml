@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    master:
+      hikari:
+        username: root
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3306/test
+    slave1:
+      hikari:
+        username: root
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3307/test
+    slave2:
+      hikari:
+        username: root
+        password: 1234
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://localhost:3308/test
+  jpa:
+    hibernate:
+      ddl-auto: create
