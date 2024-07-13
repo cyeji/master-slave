@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -39,27 +40,31 @@ public class DataSourceConfiguration {
     }
 
     @Bean
-    @Primary
     @DependsOn({MASTER_DATASOURCE, SLAVE_DATASOURCE1, SLAVE_DATASOURCE2})
     public DataSource routingDataSource(
         @Qualifier(MASTER_DATASOURCE) DataSource masterDataSource,
         @Qualifier(SLAVE_DATASOURCE1) DataSource slaveDataSource1,
         @Qualifier(SLAVE_DATASOURCE2) DataSource slaveDataSource2) {
 
-        RoutingDataSource routingDataSource = new RoutingDataSource();
+        RoutingDataSource routingDataSource = new RoutingDataSource(2);
 
-        Map<Object, Object> datasourceMap = new HashMap<>() {
-            {
-                put("master", masterDataSource);
-                put("slave1", slaveDataSource1);
-                put("slave2", slaveDataSource2);
-            }
-        };
+        Map<Object, Object> datasourceMap = new HashMap<>();
+
+        datasourceMap.put(DataBaseReplica.MASTER, masterDataSource);
+        datasourceMap.put(DataBaseReplica.SLAVE1, slaveDataSource1);
+        datasourceMap.put(DataBaseReplica.SLAVE2, slaveDataSource2);
 
         routingDataSource.setTargetDataSources(datasourceMap);
         routingDataSource.setDefaultTargetDataSource(masterDataSource);
 
         return routingDataSource;
+    }
+
+    @DependsOn({"routingDataSource"})
+    @Bean
+    @Primary
+    public DataSource dataSource(DataSource routingDataSource) {
+        return new LazyConnectionDataSourceProxy(routingDataSource);
     }
 
 }
