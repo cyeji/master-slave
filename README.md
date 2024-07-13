@@ -27,3 +27,19 @@ SET GLOBAL general_log = 'ON';
 // 로그 실시간 확인 (bash)
 tail -f /var/lib/mysql/*.log
 ```
+
+## MYSQL 레플리케이션 설정
+
+MYSQL 9점대 기반
+
+- vim, wget 설치
+
+```bash
+
+microdnf update -y
+
+microdnf install -y vim
+
+microdnf install -y wget
+
+```
