@@ -2,22 +2,53 @@ spring:
   datasource:
     master:
       hikari:
-        username: root
-        password: 1234
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3306/test
+        jdbc-url: ENC(uae6Svb4WOdVh2unElpisEkaAPPRDtyVurBGTclfeP9uj+ZMGGKE6UoNa3Okhg+Y1wwMgJ494JV+EPFTCP+26g==)
     slave1:
       hikari:
-        username: root
-        password: 1234
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3307/test
+        jdbc-url: ENC(hklHHL23L1jTi9hwESYYFNh9aRzU5cxtfkyfJYCAgJc4nPatHHxdVVcaRJ6p+sewpiJF60/ECmQ8BMycAA+Z/w==)
     slave2:
       hikari:
-        username: root
-        password: 1234
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
         driver-class-name: com.mysql.cj.jdbc.Driver
-        jdbc-url: jdbc:mysql://localhost:3308/test
+        jdbc-url: ENC(WxzD1np7Qy1wRGXaiY4XlcYF37iWl3vXceP+LDnaQSusz/cIuGBELIikSHtOcpZAFZP6Yl3kfP4nlFfyLDNSZA==)
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
+  shardingsphere:
+    datasource:
+      names: main, sub1, sub2
+      main:
+        url: ENC(uae6Svb4WOdVh2unElpisEkaAPPRDtyVurBGTclfeP9uj+ZMGGKE6UoNa3Okhg+Y1wwMgJ494JV+EPFTCP+26g==)
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
+      sub1:
+        url: ENC(hklHHL23L1jTi9hwESYYFNh9aRzU5cxtfkyfJYCAgJc4nPatHHxdVVcaRJ6p+sewpiJF60/ECmQ8BMycAA+Z/w==)
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
+      sub2:
+        url: ENC(WxzD1np7Qy1wRGXaiY4XlcYF37iWl3vXceP+LDnaQSusz/cIuGBELIikSHtOcpZAFZP6Yl3kfP4nlFfyLDNSZA==)
+        username: ENC(D8Ww1vVC2GxrJGLaZ5KyDA==)
+        password: ENC(tIs6ip83iOHEuSWOCSP2fw==)
+    sharding:
+      default-databases-strategy:
+        inline:
+          sharding-column: id
+          algorithm-expression: db$->{id%2+1}
+    props:
+      sql:
+        show: true
+    masterslave:
+      load-balance-algorithm-type: round_robin
+      name: ms
+      master-data-source-name: main
+      slave-data-source-names: sub1, sub2
+jasypt:
+  encryptor:
+    bean: jasyptEncryptor
